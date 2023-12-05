@@ -25,7 +25,7 @@ class Rectangle {
         $x2 = $this->x2;
         $y1 = $this->y1;
         $y2 = $this->y2;
-        // When the line is Horizontal
+
         if ($x1 == $x2 || $y1 == $y2) {
             $line = new Line($this->grid, $x1, $y1, $x2, $y2);
             return $this->grid;

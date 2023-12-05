@@ -27,22 +27,28 @@ class Draw extends Command
         $filename = $input->getArgument('filename');
         $commands = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        $this->canvas = new Canvas(0, 0); 
+        $this->canvas = new Canvas(0, 0);
 
+        $firstIteration  = true;
         foreach ($commands as $command) {
-            $this->processCommand($command);
+            $parts = explode(' ', $command);
+            $action = strtoupper(trim($parts[0]));
+            if ( $firstIteration) {
+                if ($action != "C") {
+                    throw new \LogicException('Please add a canvas');
+                }
+                $firstIteration = false;
+            }
+          
+            $this->processAction($action,$parts);
         }
         $outputFilePath = 'output.txt';
         file_put_contents($outputFilePath, $this->canvas->render());
         return Command::SUCCESS;
     }
 
-    private function processCommand(string $command)
+    private function processAction(string $action,$parts)
     {
-   
-        $parts = explode(' ', $command);
-        $action = strtoupper(trim($parts[0]));
-
         switch ($action) {
             case 'C':
                 echo "Creating canvas with dimensions $parts[1] x $parts[2]\n";
@@ -58,7 +64,7 @@ class Draw extends Command
                 $this->canvas->fillArea((int)$parts[1], (int)$parts[2], $parts[3]);
                 break;
             default:
-                // Unknown command
+                throw new \LogicException('Invalid command');
                 break;
         }
     }
