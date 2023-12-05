@@ -1,7 +1,10 @@
 #!/usr/bin/env php
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
- 
-use DrawingTool\Application;
+
+use Symfony\Component\Console\Application;
+use DrawingTool\Draw;
 
 $app = new Application();
+$app->add(new Draw());
+$app->run();
